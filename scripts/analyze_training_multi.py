@@ -10,6 +10,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 import dream.analysis as dream_analysis
+import dream.utilities
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
