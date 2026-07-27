@@ -6,6 +6,8 @@ import argparse
 import os
 import subprocess
 
+import dream
+
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 # Totally developmental script
