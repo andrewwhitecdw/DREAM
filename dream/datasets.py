@@ -303,6 +303,8 @@ if __name__ == "__main__":
         keypoint_names,
         (400, 400),
         (100, 100),
+        None,
+        "resize",
         include_belief_maps=True,
         augment_data=True,
     )
@@ -310,7 +312,7 @@ if __name__ == "__main__":
         train_dataset, batch_size=32, shuffle=False, num_workers=1, pin_memory=True
     )
 
-    targets = iter(trainingdata).next()
+    targets = next(iter(trainingdata))
 
     for i, b in enumerate(targets["belief_maps"][0]):
         print(b.shape)
