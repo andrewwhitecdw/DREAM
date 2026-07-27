@@ -28,7 +28,7 @@ parser.add_argument(
 )
 
 parser.add_argument("--styles", nargs="+", default=None, help="")
-parser.add_argument("--threshold", default=0.1)
+parser.add_argument("--threshold", type=float, default=0.1)
 
 parser.add_argument("--colours", nargs="+", default=None, help="")
 
@@ -89,16 +89,16 @@ for i_csv, csv_file in enumerate(args.data):
     from dream import analysis as dream_analysis
 
     pnp_metrics = dream_analysis.pnp_metrics(df["add"], df["n_inframe_gt_projs"])
-    assert pnp_metrics["add_auc"] == auc
-    assert pnp_metrics["add_mean"] == np.mean(
+    assert np.isclose(pnp_metrics["add_auc"], auc)
+    assert np.isclose(pnp_metrics["add_mean"], np.mean(
         add[np.where(add > pnp_sol_found_magic_number)]
-    )
-    assert pnp_metrics["add_median"] == np.median(
+    ))
+    assert np.isclose(pnp_metrics["add_median"], np.median(
         add[np.where(add > pnp_sol_found_magic_number)]
-    )
-    assert pnp_metrics["add_std"] == np.std(
+    ))
+    assert np.isclose(pnp_metrics["add_std"], np.std(
         add[np.where(add > pnp_sol_found_magic_number)]
-    )
+    ))
     assert pnp_metrics["num_pnp_found"] == n_pnp_found
     assert pnp_metrics["num_pnp_possible"] == n_pnp_possible_frames
 
@@ -134,7 +134,7 @@ for i_csv, csv_file in enumerate(args.data):
     except:
         style = "-"
 
-    label = f"{label} ({auc:.3f})"
+    label = "{} ({:.3f})".format(label, auc)
     ax.plot(add_threshold_values, counts, style, color=colour, label=label)
 
 plt.xlabel("ADD threshold distance (mm)")
@@ -150,8 +150,11 @@ for i, t in enumerate(legend.get_texts()):
         t.set_position((-30, 0))
 
 ax.set_ylim(0, 1)
-ax.set_xlim(0, float(args.threshold))
-ax.set_xticklabels([0, 20, 40, 60, 80, 100])
+threshold = float(args.threshold)
+ax.set_xlim(0, threshold)
+xticks = np.linspace(0, threshold, 6)
+ax.set_xticks(xticks)
+ax.set_xticklabels(["{:.3g}".format(x) for x in xticks])
 
 plt.savefig(args.output)
 if args.show:
