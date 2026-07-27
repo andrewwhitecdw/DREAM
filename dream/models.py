@@ -202,7 +202,7 @@ class DopeNetworkBelief(nn.Module):
                 self.vgg.add_module(str(r + 3), nn.ReLU(inplace=True))
 
             elif feature_extractor == "resnet":
-                temp = models.resnet152(pretrained=pretrained)
+                temp = tviz_models.resnet152(pretrained=pretrained)
                 vgg = nn.Sequential()
                 vgg.add_module("0", temp.conv1)
                 vgg.add_module("1", temp.bn1)
