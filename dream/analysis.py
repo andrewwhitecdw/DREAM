@@ -958,26 +958,34 @@ def pnp_metrics(
     add_pnp_found = pnp_add[idx_pnp_found]
     num_pnp_found = len(idx_pnp_found)
 
-    mean_add = np.mean(add_pnp_found)
-    median_add = np.median(add_pnp_found)
-    std_add = np.std(add_pnp_found)
-
     num_pnp_possible = len(
         np.where(num_inframe_projs_gt >= num_min_inframe_projs_gt_for_pnp)[0]
     )
     num_pnp_not_found = num_pnp_possible - num_pnp_found
 
-    delta_threshold = 0.00001
-    add_threshold_values = np.arange(0.0, add_auc_threshold, delta_threshold)
+    if num_pnp_found > 0:
+        mean_add = np.mean(add_pnp_found)
+        median_add = np.median(add_pnp_found)
+        std_add = np.std(add_pnp_found)
+    else:
+        mean_add = None
+        median_add = None
+        std_add = None
 
-    counts = []
-    for value in add_threshold_values:
-        under_threshold = len(np.where(add_pnp_found <= value)[0]) / float(
-            num_pnp_possible
-        )
-        counts.append(under_threshold)
+    if num_pnp_possible > 0:
+        delta_threshold = 0.00001
+        add_threshold_values = np.arange(0.0, add_auc_threshold, delta_threshold)
 
-    auc = np.trapz(counts, dx=delta_threshold) / float(add_auc_threshold)
+        counts = []
+        for value in add_threshold_values:
+            under_threshold = len(np.where(add_pnp_found <= value)[0]) / float(
+                num_pnp_possible
+            )
+            counts.append(under_threshold)
+
+        auc = np.trapz(counts, dx=delta_threshold) / float(add_auc_threshold)
+    else:
+        auc = None
 
     metrics = {
         "num_pnp_found": num_pnp_found,
@@ -1121,8 +1129,9 @@ def sample_range_analysis(
 
         for n in range(len(belief_map_images)):
             # Upscale belief map to net input resolution
+            resample_mode = getattr(PILImage, "Resampling", PILImage).BILINEAR
             belief_map_image_upscaled = belief_map_images[n].resize(
-                net_input_res_inf, resample=PILImage.BILINEAR
+                net_input_res_inf, resample=resample_mode
             )
 
             # Increase image brightness to account for the belief map overlay
