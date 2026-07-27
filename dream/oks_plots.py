@@ -122,9 +122,9 @@ for i_csv, csv_file in enumerate(args.data):
     temp_pred = np.reshape(np.array(all_pred), (dim[0] * dim[1], dim[2]))
     temp_gt = np.reshape(np.array(all_gt), (dim[0] * dim[1], dim[2]))
     kp_metrics = dream_analysis.keypoint_metrics(temp_pred, temp_gt, (640, 480))
-    assert kp_metrics["l2_error_mean_px"] == np.mean(all_dist)
-    assert kp_metrics["l2_error_median_px"] == np.median(all_dist)
-    assert kp_metrics["l2_error_std_px"] == np.std(all_dist)
+    assert np.abs(kp_metrics["l2_error_mean_px"] - np.mean(all_dist)) < 1.0e-9
+    assert np.abs(kp_metrics["l2_error_median_px"] - np.median(all_dist)) < 1.0e-9
+    assert np.abs(kp_metrics["l2_error_std_px"] - np.std(all_dist)) < 1.0e-9
     assert np.abs(auc - kp_metrics["l2_error_auc"]) < 1.0e-15
 
     # plot
