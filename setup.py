@@ -23,7 +23,7 @@ setup(
     maintainer='Timothy Lee',
     maintainer_email='timothyelee@cmu.edu',
     description='Deep Robot-to-camera Extrinsics for Articulated Manipulators',
-    packages=['dream'],
+    packages=find_packages(),
     package_dir={'dream': 'dream'},
     zip_safe=False
 )
