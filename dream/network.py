@@ -297,6 +297,8 @@ class DreamNetwork:
                 self.architecture_type
             )
 
+        self.soft_argmax = SoftArgmaxPavlo(self.n_keypoints)
+
         # Optimizer is created in a separate call, because this isn't needed unless we're training
         self.optimizer = None
 
