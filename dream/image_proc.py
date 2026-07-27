@@ -384,7 +384,7 @@ def centered_crop_image(image, cropped_width, cropped_height):
     )
     assert isinstance(
         cropped_height, int
-    ), 'Expected cropped_width to be an integer, but it is "{}".'.format(
+    ), 'Expected cropped_height to be an integer, but it is "{}".'.format(
         type(cropped_height)
     )
 
@@ -443,7 +443,7 @@ def scale_image(image, factor=-1, new_width=-1, new_height=-1):
     ), 'Expected new_width to be an integer, but it is "{}".'.format(type(new_width))
     assert isinstance(
         new_height, int
-    ), 'Expected new_width to be an integer, but it is "{}".'.format(type(new_height))
+    ), 'Expected new_height to be an integer, but it is "{}".'.format(type(new_height))
 
     assert (
         0 < new_width and new_width <= image_width
@@ -452,7 +452,7 @@ def scale_image(image, factor=-1, new_width=-1, new_height=-1):
     )
     assert (
         0 < new_height and new_height <= image_height
-    ), "Expected new_width to be greater than zero and less than or equal to image_height ({}), but it is {}.".format(
+    ), "Expected new_height to be greater than zero and less than or equal to image_height ({}), but it is {}.".format(
         image_height, new_height
     )
 
