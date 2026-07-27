@@ -81,7 +81,7 @@ def inverse_preprocess_image(
             image_input_resolution, preprocessed_image.size
         )
         # We cannot recover the pixels that were cropped, so we will just use black pixels
-        inv_preproc_image = PILImage.new("RGB", image_input_resolution)
+        inv_preproc_image = PILImage.new(preprocessed_image.mode, image_input_resolution)
         inv_resize_preproc_image = preprocessed_image.resize(
             cropped_res, resample=PILImage.BILINEAR
         )
@@ -234,11 +234,12 @@ def convert_keypoints_to_raw_from_netin(
             keypoints_raw.append(kp_raw)
 
     elif image_preprocessing == "shrink":
+        shrink_image_res = shrink_resolution(image_raw_resolution, net_input_resolution)
         keypoints_raw = []
         for proj in keypoints_netin:
             kp_raw = [
-                proj[0] / net_input_resolution[0] * image_raw_resolution[0],
-                proj[1] / net_input_resolution[1] * image_raw_resolution[1],
+                proj[0] / shrink_image_res[0] * image_raw_resolution[0],
+                proj[1] / shrink_image_res[1] * image_raw_resolution[1],
             ]
             keypoints_raw.append(kp_raw)
 
@@ -593,7 +594,7 @@ def overlay_points_on_image(
     return image_as_pil
 
 
-def image_from_tensor(image_tensor):
+def image_from_tensor(image_tensor, *args, **kwargs):
 
     # Input argument handling
     assert isinstance(
@@ -602,7 +603,7 @@ def image_from_tensor(image_tensor):
         type(image_tensor)
     )
 
-    image = TVTransformsFunc.to_pil_image(image_tensor)
+    image = TVTransformsFunc.to_pil_image(image_tensor, *args, **kwargs)
 
     return image
 
@@ -893,9 +894,9 @@ def create_belief_map(
         # TODO makes this dynamics so that 0,0 would generate a belief map.
         if (
             pixel_u - w >= 0
-            and pixel_u + w + 1 < image_width
+            and pixel_u + w < image_width
             and pixel_v - w >= 0
-            and pixel_v + w + 1 < image_height
+            and pixel_v + w < image_height
         ):
             for i in range(pixel_u - w, pixel_u + w + 1):
                 for j in range(pixel_v - w, pixel_v + w + 1):
