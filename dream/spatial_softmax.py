@@ -102,5 +102,5 @@ if __name__ == "__main__":
     data[0, 0, 0, 1] = 10
     data[0, 1, 1, 1] = 10
     data[0, 2, 1, 2] = 10
-    layer = SpatialSoftmax(3, 3, 3, temperature=1)
+    layer = SoftArgmaxPavlo(n_keypoints=3, learned_beta=False, initial_beta=1.0)
     print(layer(data))
