@@ -266,13 +266,13 @@ def visualize_network_inference(args):
                     if needs_belief_maps:
                         belief_maps = belief_maps_batch[b]
                         selected_belief_maps_copy = (
-                            belief_maps[idx_keypoints, :, :].detach().clone()
+                            belief_maps[idx_keypoints, :, :].detach().cpu().clone()
                         )
                     else:
                         selected_belief_maps_copy = []
 
                     detected_kp_projs_netout = np.array(
-                        detected_kp_projs_netout_batch[b], dtype=float
+                        detected_kp_projs_netout_batch[b].cpu(), dtype=float
                     )
                     selected_detected_kp_projs_netout = detected_kp_projs_netout[
                         idx_keypoints, :
