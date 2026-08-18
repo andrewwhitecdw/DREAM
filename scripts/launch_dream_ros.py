@@ -178,12 +178,15 @@ class DreamInferenceROS:
 
     def on_capture_frame(self, req):
         print("Capturing frame.")
-        found_kp_projs_net_input = dream_ros.process_image()
+        found_kp_projs_net_input = self.process_image()
+        if found_kp_projs_net_input is None:
+            print("No image available yet -- not continuing.")
+            return []
         print(found_kp_projs_net_input)
         (
             kp_projs_raw_good_sample,
             kp_positions_good_sample,
-        ) = dream_ros.keypoint_correspondences(found_kp_projs_net_input)
+        ) = self.keypoint_correspondences(found_kp_projs_net_input)
         if self.capture_frame_max_kps and kp_projs_raw_good_sample is not None:
             n_found_keypoints = kp_projs_raw_good_sample.shape[0]
             if n_found_keypoints != self.dream_network.n_keypoints:
@@ -197,7 +200,7 @@ class DreamInferenceROS:
             kp_projs_raw_good_sample is not None
             and kp_positions_good_sample is not None
         ):
-            dream_ros.solve_pnp_buffer(
+            self.solve_pnp_buffer(
                 kp_projs_raw_good_sample, kp_positions_good_sample
             )
         return []
