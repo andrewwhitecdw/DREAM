@@ -14,6 +14,13 @@ def convert_rvec_to_quaternion(rvec):
     theta = np.sqrt(
         rvec[0] * rvec[0] + rvec[1] * rvec[1] + rvec[2] * rvec[2]
     )  # in radians
+
+    # A zero-magnitude rotation vector is the identity rotation.
+    if theta < 1e-8:
+        quaternion = Quaternion([0.0, 0.0, 0.0, 1.0])
+        quaternion.normalize()
+        return quaternion
+
     raxis = [rvec[0] / theta, rvec[1] / theta, rvec[2] / theta]
 
     # pyrr's Quaternion (order is XYZW), https://pyrr.readthedocs.io/en/latest/oo_api_quaternion.html
