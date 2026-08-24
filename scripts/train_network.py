@@ -84,6 +84,11 @@ def train_network(args):
         epoch_numbers = [x[1] for x in temp]
 
         # Most recent network
+        assert len(epoch_weight_paths) > 0, (
+            "Could not find any epoch weights in {} to resume training.".format(
+                args.output_dir
+            )
+        )
         most_recent_epoch_weight_path = epoch_weight_paths[0]
         start_epoch = epoch_numbers[0]
 
@@ -459,7 +464,7 @@ def train_network(args):
     print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
     print("")
 
-    last_epoch_timestamp = 0.0
+    last_epoch_timestamp = training_start_time
 
     for e in tqdm(range(start_epoch, args.epochs)):
         this_epoch = e + 1
@@ -619,7 +624,7 @@ def train_network(args):
                     args.output_dir, "best_network", overwrite=True
                 )
 
-        this_epoch_timestamp = time.time() - training_start_time
+        this_epoch_timestamp = time.time()
         print(
             "This epoch took {} seconds.".format(
                 this_epoch_timestamp - last_epoch_timestamp
@@ -636,7 +641,7 @@ def train_network(args):
         train_log["batch_validation_losses"].append(valid_batch_losses)
         train_log["batch_training_sample_names"].append(training_batch_sample_names)
         train_log["batch_validation_sample_names"].append(valid_batch_sample_names)
-        train_log["timestamps"].append(this_epoch_timestamp)
+        train_log["timestamps"].append(this_epoch_timestamp - training_start_time)
 
         if save_results:
             # Write training log so far
